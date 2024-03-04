@@ -1,5 +1,74 @@
+# SmartBet - Football Match Betting Platform (Solidity exam 4IBC ESGI)
+
+SmartBet is a decentralized platform for betting on football matches using Ethereum smart contracts. Users can place bets on the scores of football matches in the Premier League and win rewards based on their correct predictions.
+
+## Files
+
+The project consists of the following files:
+
+1. `SmartBet.sol`: This Solidity smart contract implements the main functionalities of the SmartBet platform, including registering users, placing bets, managing participations, and distributing winnings.
+
+2. `BettingFunctions.sol`: This Solidity smart contract contains reusable functions for managing bets and participations. It is imported and used in the `SmartBet.sol` contract.
+
+3. `Structs.sol`: This Solidity file defines the data structures used in the project, including `User`, `Match`, and `Participation`.
+
+4. `deploy.ts`: This TypeScript script deploys the `SmartBet` contract to an Ethereum network using Hardhat.
+
+5. `SmartBet.test.js`: This JavaScript test file contains unit tests for the `SmartBet` contract using Chai.
+
+## Prerequisites
+
+Before running the project, make sure you have the following installed:
+
+- Node.js
+- Hardhat
+- Hardhat Ethereum network (e.g., localhost, Sepolia, etc.)
+- Ethereum wallet (e.g., MetaMask) for interacting with the smart contracts if on a testnet or mainnet
+
+## How to Run
+
+1. Clone this repository to your local machine:
+
+```bash
+git clone https://github.com/Ronfflex/4ESGI-Solidity-exam.git
+```
+
+2. Install dependencies:
+
+```bash
+cd 4ESGI-Solidity-exam
+npm install
+```
+
+3. Compile the contracts:
+
+```bash
+npx hardhat compile
+```
+
+4. Deploy the SmartBet contract:
+
+```bash
+npx hardhat run scripts/deploy.ts --network <network-name>
+```
+
+Replace `<network-name>` with the name of the Ethereum network you want to deploy to (e.g., `localhost`, `sepolia`, etc.).
+
+5. Run tests:
+
+```bash
+npx hardhat test
+```
+
+This command will run the tests defined in `SmartBet.test.js`.
+
+## Usage
+
+Once the SmartBet contract is deployed, users can interact with it using an Ethereum wallet (e.g., MetaMask) and an Ethereum-enabled browser (e.g., Brave, Chrome with MetaMask extension). Users can register, place bets, and manage participations through the contract's functions.
+
+## Subject (french)
+
 Mini-projet solidity
-===================
 Titre du Projet : SmartBet - Plateforme de Pronostics sur les Matchs de Football de la Première Ligue
 
 Description :
