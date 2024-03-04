@@ -14,6 +14,7 @@ struct Match {
     uint homeTeamScore;
     uint awayTeamScore;
     bool resultConfirmed;
+    address[] participants;
 }
 
 struct Participation {

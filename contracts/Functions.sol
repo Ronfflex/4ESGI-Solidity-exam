@@ -24,7 +24,7 @@ contract BettingFunctions {
 
     // Function to register a new user
     function registerUser(address _userAddress) external {
-        require(users[_userAddress].userAddress == address(0), "User already registered");
+        require(!users[_userAddress].registered, "User already registered");
         users[_userAddress] = User(_userAddress, 0, true);
         emit UserRegistered(_userAddress);
     }
@@ -32,19 +32,23 @@ contract BettingFunctions {
     // Function to place a bet on a match
     function placeBet(uint _matchId, uint _homeTeamScore, uint _awayTeamScore) external payable {
         require(msg.value > 0, "Invalid bet amount");
-        require(matches[_matchId].homeTeam != address(0), "Match does not exist");
+        require(matches[_matchId].id != 0, "Match does not exist");
         
         // Ensure user has not already placed a bet on this match
-        require(participations[msg.sender][_matchId].userAddress == address(0), "User already placed a bet on this match");
+        require(!participations[msg.sender][_matchId].settled, "User already placed a bet on this match");
         
-        participations[msg.sender][_matchId] = Participation(msg.sender, _matchId, _homeTeamScore, _awayTeamScore, msg.value);
+        // Add the user to the participants array for this match
+        Match storage matchData = matches[_matchId];
+        matchData.participants.push(msg.sender);
+        
+        // Record the user's participation
+        participations[msg.sender][_matchId] = Participation(_matchId, msg.sender, _homeTeamScore, _awayTeamScore, msg.value, false);
         emit BetPlaced(msg.sender, _matchId, _homeTeamScore, _awayTeamScore, msg.value);
     }
     
     // Function to manage participations after the match
     function manageParticipation(uint _matchId, uint _homeTeamScore, uint _awayTeamScore) external {
-        require(matches[_matchId].homeTeam != address(0), "Match does not exist");
-        
+        require(matches[_matchId].id != 0, "Match does not exist");
         Match storage matchData = matches[_matchId];
         
         // Iterate through all participations for this match
@@ -53,10 +57,10 @@ contract BettingFunctions {
             Participation storage participation = participations[userAddress][_matchId];
             
             // Check if the user's prediction is correct
-            if (participation.homeTeamScore == _homeTeamScore && participation.awayTeamScore == _awayTeamScore) {
-                // Calculate winnings and update user's balance
-                uint winnings = participation.amount * matchData.odds / 100;
-                users[userAddress].balance += winnings;
+            if (participation.homeTeamScorePrediction == _homeTeamScore && participation.awayTeamScorePrediction == _awayTeamScore) {
+                // Calculate winnings and update user's balance (fixed odds)
+                uint winnings = participation.amountBet * 1 / 100;
+                users[userAddress].totalGains += winnings;
                 
                 // Emit event for managing participation
                 emit ParticipationManaged(userAddress, _matchId, _homeTeamScore, _awayTeamScore, winnings);
