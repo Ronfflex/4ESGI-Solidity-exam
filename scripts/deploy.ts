@@ -1,17 +1,22 @@
 import { ethers } from "hardhat";
 
 async function main() {
+  // Get the admin account from the Hardhat node
+  const [admin] = await ethers.getSigners();
+
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const unlockTime = currentTimestampInSeconds + 60;
 
   const lockedAmount = ethers.parseEther("0.001");
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
+  const lock = await ethers.deployContract("SmartBet", [unlockTime], {
     value: lockedAmount,
   });
 
   await lock.waitForDeployment();
 
+  console.log("SmartBet deployed to:", lock.address);
+  console.log("Admin address:", admin.address);
   console.log(
     `Lock with ${ethers.formatEther(
       lockedAmount
@@ -19,9 +24,9 @@ async function main() {
   );
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
