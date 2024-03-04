@@ -58,7 +58,7 @@ contract BettingFunctions {
             
             // Check if the user's prediction is correct
             if (participation.homeTeamScorePrediction == _homeTeamScore && participation.awayTeamScorePrediction == _awayTeamScore) {
-                // Calculate winnings and update user's balance (fixed odds)
+                // Calculate winnings and update user's balance (fixed odds because flemme de faire des cotes variables)
                 uint winnings = participation.amountBet * 1 / 100;
                 users[userAddress].totalGains += winnings;
                 
